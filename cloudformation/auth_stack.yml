@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Spotify Auth Lambda with Parameter Store
+
+Resources:
+  # Lambda Execution Role
+  AuthLambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: SpotifyAuthLambdaRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: SSMAccessPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "ssm:GetParameter"
+                Resource:
+                  - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/spotify/*
+
+  # Lambda Function
+  SpotifyAuthLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: spotify-auth-lambda
+      Handler: spotify_auth.lambda_handler
+      Runtime: python3.9
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        S3Bucket: !ImportValue S3ForAuthName
+        S3Key: spotify_auth.zip
+      Timeout: 15
+      Tags:
+        - Key: Project
+          Value: spotify-playlist-getter

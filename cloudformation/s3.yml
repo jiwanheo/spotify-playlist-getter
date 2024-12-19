@@ -1,0 +1,20 @@
+Resources:
+  S3ForAuth:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: spotifyPlaylistGetter-auth
+      VersioningConfiguration:
+        Status: Enabled # Enable versioning if needed
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerPreferred
+      Tags:
+        - Key: Project
+          Value: spotify-playlist-getter
+
+Outputs:
+  S3ForAuthName:
+    Description: The domain name of the S3 bucket for the auth lambda code
+    Value: !Ref S3ForAuth
+    Export:
+      Name: S3ForAuthName
