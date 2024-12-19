@@ -43,8 +43,23 @@ def get_spotify_token():
 
     return token_data["access_token"], token_data["expires_in"]
 
-# Test function
-if __name__ == "__main__":
-    token, ttl = get_spotify_token()
-    print(f"Spotify API Token: {token}")
-    print(f"Token Expires In: {ttl} seconds")
+def lambda_handler(event, context):
+    """
+    AWS Lambda handler function.
+    """
+    try:
+        token, ttl = get_spotify_token()
+        return {
+            "statusCode": 200,
+            "body": json.dumps({
+                "access_token": token,
+                "expires_in": ttl
+            })
+        }
+    except Exception as e:
+        return {
+            "statusCode": 500,
+            "body": json.dumps({
+                "error": str(e)
+            })
+        }
