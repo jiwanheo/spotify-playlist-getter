@@ -2,7 +2,7 @@ Resources:
   S3ForAuth:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: spotifyPlaylistGetter-auth
+      BucketName: spotify_playlist_getter-auth
       VersioningConfiguration:
         Status: Enabled # Enable versioning if needed
       OwnershipControls:
