@@ -43,15 +43,37 @@ def get_spotify_token():
 
     return token_data["access_token"], token_data["expires_in"]
 
+def store_token_in_parameter_store(token, ttl):
+    """
+    Store the Spotify token and its TTL in AWS Systems Manager Parameter Store.
+    """
+    ssm_client = boto3.client("ssm")
+    # Store the token
+    ssm_client.put_parameter(
+        Name="/spotify/access_token",
+        Value=token,
+        Type="SecureString",
+        Overwrite=True
+    )
+    # Store the token expiration time
+    ssm_client.put_parameter(
+        Name="/spotify/token_ttl",
+        Value=str(ttl),
+        Type="String",
+        Overwrite=True
+    )
+
 def lambda_handler(event, context):
     """
     AWS Lambda handler function.
     """
     try:
         token, ttl = get_spotify_token()
+        store_token_in_parameter_store(token, ttl)
         return {
             "statusCode": 200,
             "body": json.dumps({
+                "message": "Token stored successfully",
                 "access_token": token,
                 "expires_in": ttl
             })
