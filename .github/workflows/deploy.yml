@@ -26,7 +26,7 @@ jobs:
     - name: Deploy S3 Stack
       run: |
         aws cloudformation deploy \
-          --template-file cloudformation/s3bucket.yml \
+          --template-file cloudformation/s3.yml \
           --stack-name spotifyPlaylistGetter-S3BucketStack \
           --capabilities CAPABILITY_NAMED_IAM \
           --region us-east-1 \
