@@ -1,0 +1,36 @@
+Resources:
+  SpotifyAPIRequestLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: spotify-api-request-lambda
+      Handler: spotify_api_request.lambda_handler
+      Runtime: python3.9
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        S3Bucket: !ImportValue S3ForRequestName
+        S3Key: spotify_api_request.zip
+      Timeout: 15
+      Environment:
+        Variables:
+          SPOTIFY_API_BASE_URL: "https://api.spotify.com/v1"
+
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Action: "sts:AssumeRole"
+            Effect: "Allow"
+            Principal:
+              Service: "lambda.amazonaws.com"
+      Policies:
+        - PolicyName: SpotifyAPIRequestLambdaPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Action:
+                  - "ssm:GetParameter"
+                  - "logs:*"
+                Effect: "Allow"
+                Resource: "*"
