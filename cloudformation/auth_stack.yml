@@ -32,7 +32,7 @@ Resources:
       FunctionName: spotify-auth-lambda
       Handler: spotify_auth.lambda_handler
       Runtime: python3.9
-      Role: !GetAtt LambdaExecutionRole.Arn
+      Role: !GetAtt AuthLambdaExecutionRole.Arn
       Code:
         S3Bucket: !ImportValue S3ForAuthName
         S3Key: spotify_auth.zip
