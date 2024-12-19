@@ -37,7 +37,7 @@ jobs:
       run: |
         cd src/lambda
         zip -r spotify_auth.zip spotify_auth.py
-        aws s3 cp spotify_auth.zip s3://spotifyPlaylistGetter-auth/spotify_auth.zip
+        aws s3 cp spotify_auth.zip s3://spotify-playlist-getter.auth/spotify_auth.zip
 
     # Deploy Auth Stack
     - name: Deploy CloudFormation Stack
