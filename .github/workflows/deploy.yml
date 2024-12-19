@@ -32,15 +32,11 @@ jobs:
           --region us-east-1 \
           --tags Project=spotify-playlist-getter
 
-    # Zip the Auth Lambda code
-    - name: Package Lambda Code
+    # Zip the Auth Lambda code and upload to S3
+    - name: Package Lambda Code and upload
       run: |
         cd src/lambda
         zip -r spotify_auth.zip spotify_auth.py
-
-    # Upload Lambda code to S3
-    - name: Upload Lambda to S3
-      run: |
         aws s3 cp spotify_auth.zip s3://spotifyPlaylistGetter-auth/spotify_auth.zip
 
     # Deploy Auth Stack
