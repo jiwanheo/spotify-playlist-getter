@@ -1,5 +1,8 @@
 import boto3
-import requests
+import urllib.request
+import urllib.parse
+import base64
+import json
 
 SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token"
 
@@ -14,17 +17,30 @@ def get_spotify_credentials():
 
 def get_spotify_token():
     """
-    Generate Spotify API token using client credentials.
+    Generate Spotify API token using client credentials and urllib.
     """
     client_id, client_secret = get_spotify_credentials()
-    response = requests.post(
+
+    # Encode credentials for Basic Auth
+    auth_header = base64.b64encode(f"{client_id}:{client_secret}".encode("utf-8")).decode("utf-8")
+
+    # Prepare the request payload
+    payload = urllib.parse.urlencode({"grant_type": "client_credentials"}).encode("utf-8")
+
+    # Prepare and send the HTTP request
+    request = urllib.request.Request(
         SPOTIFY_TOKEN_URL,
-        headers={"Content-Type": "application/x-www-form-urlencoded"},
-        data={"grant_type": "client_credentials"},
-        auth=(client_id, client_secret),
+        data=payload,
+        headers={
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": f"Basic {auth_header}"
+        }
     )
-    response.raise_for_status()
-    token_data = response.json()
+
+    with urllib.request.urlopen(request) as response:
+        response_data = response.read()
+        token_data = json.loads(response_data)
+
     return token_data["access_token"], token_data["expires_in"]
 
 # Test function
