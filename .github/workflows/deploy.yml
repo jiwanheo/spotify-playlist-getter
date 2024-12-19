@@ -44,5 +44,5 @@ jobs:
       run: |
         aws cloudformation deploy \
           --template-file cloudformation/auth_stack.yml \
-          --stack-name spotifyPlaylistGetter-auth \
+          --stack-name spotifyPlaylistGetter-AuthStack \
           --capabilities CAPABILITY_NAMED_IAM
