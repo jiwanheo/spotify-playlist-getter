@@ -17,23 +17,39 @@ Resources:
   LambdaExecutionRole:
     Type: AWS::IAM::Role
     Properties:
+      RoleName: SpotifyAPIRequestLambdaRole
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
-          - Action: "sts:AssumeRole"
-            Effect: "Allow"
+          - Effect: Allow
             Principal:
-              Service: "lambda.amazonaws.com"
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
       Policies:
-        - PolicyName: SpotifyAPIRequestLambdaPolicy
+        - PolicyName: SpotifyAPIRequestPolicy
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
-              - Action:
+              # Allow access to Parameter Store for Spotify tokens and credentials
+              - Effect: Allow
+                Action:
                   - "ssm:GetParameter"
-                  - "logs:*"
-                Effect: "Allow"
+                  - "ssm:PutParameter"
+                Resource: 
+                  - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/spotify/*
+              # Allow Lambda to invoke the SpotifyAuthLambda for token refresh
+              - Effect: Allow
+                Action:
+                  - "lambda:InvokeFunction"
+                Resource: !GetAtt SpotifyAuthLambda.Arn
+              # Allow logging for debugging and monitoring
+              - Effect: Allow
+                Action:
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
                 Resource: "*"
+
   
   SpotifyApiGateway:
     Type: AWS::ApiGateway::RestApi

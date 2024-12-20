@@ -2,18 +2,54 @@ import boto3
 import urllib.request
 import urllib.parse
 import json
+from datetime import datetime, timedelta
 
 # Spotify API base URL
 SPOTIFY_API_BASE_URL = "https://api.spotify.com/v1"
+SSM_CLIENT = boto3.client("ssm")
+LAMBDA_CLIENT = boto3.client("lambda")
 
 def get_access_token():
     """
     Retrieve the Spotify access token from AWS Systems Manager Parameter Store.
+    If the token is missing or stale, invoke the SpotifyAuthLambda to refresh it.
     """
-    ssm_client = boto3.client("ssm")
-    token = ssm_client.get_parameter(Name="/spotify/access_token", WithDecryption=True)["Parameter"]["Value"]
+    try:
+        # Try to fetch the token from Parameter Store
+        token = SSM_CLIENT.get_parameter(Name="/spotify/access_token", WithDecryption=True)["Parameter"]["Value"]
+        ttl = SSM_CLIENT.get_parameter(Name="/spotify/token_ttl")["Parameter"]["Value"]
+
+        # Check if the token is stale
+        token_expiration_time = datetime.utcnow() + timedelta(seconds=int(ttl))
+        if datetime.utcnow() >= token_expiration_time:
+            print("Access token is stale. Refreshing...")
+            raise ValueError("Token is stale")  # Trigger a refresh
+
+    except SSM_CLIENT.exceptions.ParameterNotFound:
+        print("Access token not found in Parameter Store. Fetching a new token...")
+        invoke_auth_lambda()
+        # Retry fetching the token after it has been generated
+        token = SSM_CLIENT.get_parameter(Name="/spotify/access_token", WithDecryption=True)["Parameter"]["Value"]
+    except ValueError:
+        # If the token is stale, invoke the auth lambda to refresh it
+        invoke_auth_lambda()
+        # Retry fetching the token after it has been generated
+        token = SSM_CLIENT.get_parameter(Name="/spotify/access_token", WithDecryption=True)["Parameter"]["Value"]
+
     return token
 
+def invoke_auth_lambda():
+    """
+    Invoke the SpotifyAuthLambda to refresh the token.
+    """
+    response = LAMBDA_CLIENT.invoke(
+        FunctionName="spotify-auth-lambda",  # Update to match the exact name of your auth Lambda
+        InvocationType="RequestResponse"
+    )
+    if response["StatusCode"] != 200:
+        raise Exception("Failed to refresh token")
+    print("Token refreshed successfully")
+    
 def make_spotify_request(endpoint, query_params=None):
     """
     Make a request to the Spotify API using the stored access token.
