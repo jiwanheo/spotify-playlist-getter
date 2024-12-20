@@ -74,3 +74,10 @@ Resources:
             AccountId: !Ref "AWS::AccountId",
             ApiId: !Ref SpotifyApiGateway
           }
+  
+  SpotifyApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: SpotifyApiMethod
+    Properties:
+      RestApiId: !Ref SpotifyApiGateway
+      StageName: dev
