@@ -39,3 +39,10 @@ Resources:
     Type: AWS::ApiGateway::RestApi
     Properties:
       Name: spotify-api-gateway
+  
+  SpotifyApiGatewayResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt SpotifyApiGateway.RootResourceId
+      PathPart: spotify
+      RestApiId: !Ref SpotifyApiGateway

@@ -54,7 +54,7 @@ jobs:
         zip -r spotify_api_request.zip spotify_api_request.py  # Add all files Lambda depends on
         aws s3 cp spotify_api_request.zip s3://spotify-playlist-getter.request/spotify_api_request.zip
         
-    - name: Deploy CloudFormation Stack
+    - name: Deploy API Stack
       run: |
         aws cloudformation deploy \
           --template-file cloudformation/spotify_api.yml \
