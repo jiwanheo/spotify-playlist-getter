@@ -51,11 +51,6 @@ Resources:
       Tags:
         - Key: Project
           Value: spotify-playlist-getter
-  
-  LambdaFunctionVersion:
-    Type: AWS::Lambda::Version
-    Properties:
-      FunctionName: !Ref SpotifyAuthLambda
 
 Outputs:
   AuthLambdaArn:

@@ -3,6 +3,11 @@ import urllib.request
 import urllib.parse
 import json
 from datetime import datetime, timedelta
+import logging
+
+# Set up logging
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 # Spotify API base URL
 SPOTIFY_API_BASE_URL = "https://api.spotify.com/v1"
@@ -87,6 +92,8 @@ def lambda_handler(event, context):
     try:
         # The endpoint to call on Spotify, e.g., '/search'
         endpoint = event["rawPath"]
+        
+        logger.info("Hello brother")
 
         # Get query parameters, if provided
         query_params = event.get("queryStringParameters", {})
