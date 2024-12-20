@@ -46,3 +46,17 @@ Resources:
       ParentId: !GetAtt SpotifyApiGateway.RootResourceId
       PathPart: spotify
       RestApiId: !Ref SpotifyApiGateway
+
+  SpotifyApiMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref SpotifyApiGateway
+      ResourceId: !Ref SpotifyApiGatewayResource
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub
+          - arn:aws:apigateway:${Region}:lambda:path/2015-03-31/functions/${SpotifyAPIRequestLambda.Arn}/invocations
+          - { Region: !Ref "AWS::Region" }
