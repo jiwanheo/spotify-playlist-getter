@@ -34,3 +34,8 @@ Resources:
                   - "logs:*"
                 Effect: "Allow"
                 Resource: "*"
+  
+  SpotifyApiGateway:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: spotify-api-gateway
