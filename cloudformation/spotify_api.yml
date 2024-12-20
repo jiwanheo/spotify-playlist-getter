@@ -50,7 +50,11 @@ Resources:
                   - "logs:PutLogEvents"
                 Resource: "*"
 
-  
+  LambdaFunctionVersion:
+    Type: AWS::Lambda::Version
+    Properties:
+      FunctionName: !Ref SpotifyAPIRequestLambda
+
   SpotifyApiGateway:
     Type: AWS::ApiGateway::RestApi
     Properties:
