@@ -85,7 +85,7 @@ Resources:
   SpotifyApiGatewayPermission:
     Type: AWS::Lambda::Permission
     Properties:
-      FunctionName: !GetAtt SpotifyAPIRequestLambda.Arn
+      FunctionName: !Ref SpotifyAPIRequestLambda
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub
