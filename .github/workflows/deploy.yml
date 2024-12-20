@@ -40,11 +40,11 @@ jobs:
         aws s3 cp spotify_auth.zip s3://spotify-playlist-getter.auth/spotify_auth.zip
     
     # Trigger stack update
-    - name: Update CloudFormation Stack
+    - name: Update S3 Stack
       run: |
         aws cloudformation update-stack \
           --stack-name spotifyPlaylistGetter-S3BucketStack \
-          --template-body cloudformation/s3.yml \
+          --template-body file://cloudformation/s3.yml \
           --capabilities CAPABILITY_IAM
 
     # Deploy Auth Stack
@@ -63,11 +63,11 @@ jobs:
         aws s3 cp spotify_api_request.zip s3://spotify-playlist-getter.request/spotify_api_request.zip
     
     # Trigger stack update
-    - name: Update CloudFormation Stack
+    - name: Update S3 Stack
       run: |
         aws cloudformation update-stack \
           --stack-name spotifyPlaylistGetter-S3BucketStack \
-          --template-body cloudformation/s3.yml \
+          --template-body file://cloudformation/s3.yml \
           --capabilities CAPABILITY_IAM
         
     - name: Deploy API Stack
