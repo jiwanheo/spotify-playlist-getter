@@ -60,3 +60,17 @@ Resources:
         Uri: !Sub
           - arn:aws:apigateway:${Region}:lambda:path/2015-03-31/functions/${SpotifyAPIRequestLambda.Arn}/invocations
           - { Region: !Ref "AWS::Region" }
+  
+  SpotifyApiGatewayPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt SpotifyAPIRequestLambda.Arn
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub
+        - arn:aws:execute-api:${Region}:${AccountId}:${ApiId}/*
+        - {
+            Region: !Ref "AWS::Region",
+            AccountId: !Ref "AWS::AccountId",
+            ApiId: !Ref SpotifyApiGateway
+          }
