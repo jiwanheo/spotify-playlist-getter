@@ -11,6 +11,9 @@ Resources:
       Tags:
         - Key: Project
           Value: spotify-playlist-getter
+    Metadata:
+      ForceUpdate: "a"
+
   S3ForRequest:
     Type: AWS::S3::Bucket
     Properties:
@@ -23,6 +26,8 @@ Resources:
       Tags:
         - Key: Project
           Value: spotify-playlist-getter
+    Metadata:
+      ForceUpdate: "a"
 
 Outputs:
   S3ForAuthName:
