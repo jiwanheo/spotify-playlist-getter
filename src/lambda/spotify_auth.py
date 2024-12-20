@@ -3,6 +3,11 @@ import urllib.request
 import urllib.parse
 import base64
 import json
+import logging
+
+# Set up logging
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token"
 
@@ -10,6 +15,9 @@ def get_spotify_credentials():
     """
     Retrieve Spotify API credentials from AWS Systems Manager Parameter Store.
     """
+
+    logger.info("Hello brother")
+
     ssm_client = boto3.client("ssm")
     client_id = ssm_client.get_parameter(Name="/spotify/client_id", WithDecryption=True)["Parameter"]["Value"]
     client_secret = ssm_client.get_parameter(Name="/spotify/client_secret", WithDecryption=True)["Parameter"]["Value"]

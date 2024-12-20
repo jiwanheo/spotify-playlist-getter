@@ -38,9 +38,17 @@ jobs:
         cd src/lambda
         zip -r spotify_auth.zip spotify_auth.py
         aws s3 cp spotify_auth.zip s3://spotify-playlist-getter.auth/spotify_auth.zip
+    
+    # Trigger stack update
+    - name: Update CloudFormation Stack
+      run: |
+        aws cloudformation update-stack \
+          --stack-name spotifyPlaylistGetter-S3BucketStack \
+          --template-body cloudformation/s3.yml \
+          --capabilities CAPABILITY_IAM
 
     # Deploy Auth Stack
-    - name: Deploy CloudFormation Stack
+    - name: Deploy Authentication Stack
       run: |
         aws cloudformation deploy \
           --template-file cloudformation/auth.yml \
@@ -53,6 +61,14 @@ jobs:
         cd src/lambda
         zip -r spotify_api_request.zip spotify_api_request.py  # Add all files Lambda depends on
         aws s3 cp spotify_api_request.zip s3://spotify-playlist-getter.request/spotify_api_request.zip
+    
+    # Trigger stack update
+    - name: Update CloudFormation Stack
+      run: |
+        aws cloudformation update-stack \
+          --stack-name spotifyPlaylistGetter-S3BucketStack \
+          --template-body cloudformation/s3.yml \
+          --capabilities CAPABILITY_IAM
         
     - name: Deploy API Stack
       run: |
