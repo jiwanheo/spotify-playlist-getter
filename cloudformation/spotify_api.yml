@@ -41,7 +41,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - "lambda:InvokeFunction"
-                Resource: !GetAtt SpotifyAuthLambda.Arn
+                Resource: !ImportValue AuthLambdaArn
               # Allow logging for debugging and monitoring
               - Effect: Allow
                 Action:

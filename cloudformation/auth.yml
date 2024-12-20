@@ -40,3 +40,10 @@ Resources:
       Tags:
         - Key: Project
           Value: spotify-playlist-getter
+
+Outputs:
+  AuthLambdaArn:
+    Description: The Arn of the auth lambda
+    Value: !GetAtt SpotifyAuthLambda.Arn
+    Export:
+      Name: AuthLambdaArn
