@@ -74,7 +74,6 @@ def lambda_handler(event, context):
     AWS Lambda handler function.
     """
     try:
-        logger.info("Hello brother")
         token, ttl = get_spotify_token()
         store_token_in_parameter_store(token, ttl)
         return {

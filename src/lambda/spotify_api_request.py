@@ -51,9 +51,6 @@ def invoke_auth_lambda():
         FunctionName="spotify-auth-lambda",  # Update to match the exact name of your auth Lambda
         InvocationType="RequestResponse"
     )
-    
-    payload_body = json.loads(response["Payload"].read())
-    print(payload_body)
 
     if response["StatusCode"] != 200:
         raise Exception("Failed to refresh token")
@@ -65,7 +62,7 @@ def make_spotify_request(endpoint, query_params=None):
     """
     # Retrieve the access token
     token = get_access_token()
-    logger.info(f"token: {token}")
+    
     # Set up the Authorization header with the Bearer token
     headers = {"Authorization": f"Bearer {token}"}
 
@@ -75,10 +72,10 @@ def make_spotify_request(endpoint, query_params=None):
         url = f"{SPOTIFY_API_BASE_URL}{endpoint}?{query_string}"
     else:
         url = f"{SPOTIFY_API_BASE_URL}{endpoint}"
-    logger.info(f"url: {url}")
+        
     # Make the request to Spotify's API
     request = urllib.request.Request(url, headers=headers)
-    logger.info(f"request: {request}")
+    
     try:
         # Open the URL and get the response
         with urllib.request.urlopen(request) as response:
