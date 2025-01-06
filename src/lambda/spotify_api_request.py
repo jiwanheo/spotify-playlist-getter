@@ -41,6 +41,7 @@ def get_access_token():
         # Retry fetching the token after it has been generated
         token = SSM_CLIENT.get_parameter(Name="/spotify/access_token", WithDecryption=True)["Parameter"]["Value"]
 
+    logger.info("Does it reach here")
     return token
 
 def invoke_auth_lambda():
