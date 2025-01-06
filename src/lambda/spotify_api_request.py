@@ -2,7 +2,7 @@ import boto3
 import urllib.request
 import urllib.parse
 import json
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import logging
 
 # Set up logging
@@ -25,8 +25,8 @@ def get_access_token():
         ttl = SSM_CLIENT.get_parameter(Name="/spotify/token_ttl")["Parameter"]["Value"]
 
         # Check if the token is stale
-        token_expiration_time = datetime.utcnow() + timedelta(seconds=int(ttl))
-        if datetime.utcnow() >= token_expiration_time:
+        token_expiration_time = datetime.now(timezone.utc) + timedelta(seconds=int(ttl))
+        if datetime.now(timezone.utc) >= token_expiration_time:
             print("Access token is stale. Refreshing...")
             raise ValueError("Token is stale")  # Trigger a refresh
 
@@ -71,10 +71,10 @@ def make_spotify_request(endpoint, query_params=None):
         url = f"{SPOTIFY_API_BASE_URL}{endpoint}?{query_string}"
     else:
         url = f"{SPOTIFY_API_BASE_URL}{endpoint}"
-
+    logger.info(f"url: {url}")
     # Make the request to Spotify's API
     request = urllib.request.Request(url, headers=headers)
-
+    logger.info(f"request: {request}")
     try:
         # Open the URL and get the response
         with urllib.request.urlopen(request) as response:
@@ -90,14 +90,12 @@ def lambda_handler(event, context):
     AWS Lambda handler function.
     """
     try:
-        logger.info("Hello brother")
 
         # The endpoint to call on Spotify, e.g., '/search'
         endpoint = event["rawPath"]
         
         # Get query parameters, if provided
         query_params = event.get("queryStringParameters", {})
-        logger.info(f"query_params: {query_params}")
 
         # Make the request to Spotify API
         response = make_spotify_request(endpoint, query_params)
