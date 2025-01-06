@@ -51,11 +51,6 @@ Resources:
                 Resource: 
                   - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*
 
-  LambdaFunctionVersion:
-    Type: AWS::Lambda::Version
-    Properties:
-      FunctionName: !Ref SpotifyAPIRequestLambda
-
   SpotifyApiGateway:
     Type: AWS::ApiGateway::RestApi
     Properties:

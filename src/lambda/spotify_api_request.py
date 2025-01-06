@@ -97,6 +97,7 @@ def lambda_handler(event, context):
         
         # Get query parameters, if provided
         query_params = event.get("queryStringParameters", {})
+        logger.info(f"query_params: {query_params}")
 
         # Make the request to Spotify API
         response = make_spotify_request(endpoint, query_params)
