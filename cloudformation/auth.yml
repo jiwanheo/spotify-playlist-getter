@@ -22,6 +22,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - "ssm:GetParameter"
+                  - "ssm:PutParameter"
                 Resource:
                   - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/spotify/*
         - PolicyName: LambdaLoggingPolicy
