@@ -61,7 +61,7 @@ def make_spotify_request(endpoint, query_params=None):
     """
     # Retrieve the access token
     token = get_access_token()
-
+    logger.info(f"token: {token}")
     # Set up the Authorization header with the Bearer token
     headers = {"Authorization": f"Bearer {token}"}
 
