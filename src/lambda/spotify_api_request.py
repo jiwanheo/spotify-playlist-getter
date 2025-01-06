@@ -51,7 +51,9 @@ def invoke_auth_lambda():
         FunctionName="spotify-auth-lambda",  # Update to match the exact name of your auth Lambda
         InvocationType="RequestResponse"
     )
-    print(f"Invocation response: {response}")  # Log full response for debugging
+    
+    payload_body = json.loads(response["Payload"].read())
+    print(payload_body)
 
     if response["StatusCode"] != 200:
         raise Exception("Failed to refresh token")
