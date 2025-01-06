@@ -41,7 +41,6 @@ def get_access_token():
         # Retry fetching the token after it has been generated
         token = SSM_CLIENT.get_parameter(Name="/spotify/access_token", WithDecryption=True)["Parameter"]["Value"]
 
-    logger.info("Does it reach here")
     return token
 
 def invoke_auth_lambda():
@@ -52,6 +51,8 @@ def invoke_auth_lambda():
         FunctionName="spotify-auth-lambda",  # Update to match the exact name of your auth Lambda
         InvocationType="RequestResponse"
     )
+    print(f"Invocation response: {response}")  # Log full response for debugging
+
     if response["StatusCode"] != 200:
         raise Exception("Failed to refresh token")
     print("Token refreshed successfully")
