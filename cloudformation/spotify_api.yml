@@ -54,7 +54,18 @@ Resources:
             AccountId: !Ref "AWS::AccountId",
             ApiId: !Ref SpotifyApiGateway
           }
-  
+  SpotifyApiStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      StageName: dev
+      RestApiId: !Ref SpotifyApiGateway
+      DeploymentId: !Ref SpotifyApiDeployment
+      MethodSettings:
+        - HttpMethod: "*"
+          ResourcePath: "/*"
+          LoggingLevel: INFO
+          MetricsEnabled: true
+
   SpotifyApiDeployment:
     Type: AWS::ApiGateway::Deployment
     DependsOn: SpotifyApiMethod
