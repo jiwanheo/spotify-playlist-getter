@@ -43,12 +43,9 @@ def get_spotify_token():
         }
     )
 
-    
-
     with urllib.request.urlopen(request) as response:
         response_data = response.read()
         token_data = json.loads(response_data)
-        print(f"token_data: {token_data}")
 
     return token_data["access_token"], token_data["expires_in"]
 
@@ -78,7 +75,9 @@ def lambda_handler(event, context):
     """
     try:
         token, ttl = get_spotify_token()
-        print("here?")
+        print(f"time now: {datetime.now(datetime.timezone.utc)}")
+        print(f"ttl: {ttl}")
+        print(f"ttl type: {type(ttl)}")
         ttl_time = datetime.now(datetime.timezone.utc) + timedelta(seconds=ttl)
         print(f"ttl_time: {ttl_time}")
 
