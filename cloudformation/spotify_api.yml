@@ -10,17 +10,8 @@ Resources:
             Principal:
               Service: apigateway.amazonaws.com
             Action: sts:AssumeRole
-      Policies:
-        - PolicyName: ApiGatewayLogsPolicy
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action:
-                  - "logs:CreateLogGroup"
-                  - "logs:CreateLogStream"
-                  - "logs:PutLogEvents"
-                Resource: "arn:aws:logs:*:*:*"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
 
   ApiGatewayAccountSettings:
     Type: AWS::ApiGateway::Account
@@ -49,7 +40,7 @@ Resources:
         - StatusCode: 200  # Success response
           ResponseModels:
             application/json: 'Empty'  # Empty response model (customizable)
-            
+
   SpotifyApiGatewayPermission:
     Type: AWS::Lambda::Permission
     Properties:
