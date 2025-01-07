@@ -16,10 +16,11 @@ def get_spotify_credentials():
     """
     Retrieve Spotify API credentials from AWS Systems Manager Parameter Store.
     """
-
+    print("reach here?")
     ssm_client = boto3.client("ssm")
     client_id = ssm_client.get_parameter(Name="/spotify/client_id", WithDecryption=True)["Parameter"]["Value"]
     client_secret = ssm_client.get_parameter(Name="/spotify/client_secret", WithDecryption=True)["Parameter"]["Value"]
+    print("whgat about here?")
     return client_id, client_secret
 
 def get_spotify_token():
