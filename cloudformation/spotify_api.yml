@@ -71,7 +71,6 @@ Resources:
     DependsOn: SpotifyApiMethod
     Properties:
       RestApiId: !Ref SpotifyApiGateway
-      StageName: dev
 
   SpotifyAPIRequestLambda:
     Type: AWS::Lambda::Function
