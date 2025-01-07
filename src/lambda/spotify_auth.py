@@ -4,7 +4,7 @@ import urllib.parse
 import base64
 import json
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timezone, timedelta
 
 # Set up logging
 logger = logging.getLogger()
@@ -75,13 +75,14 @@ def lambda_handler(event, context):
     """
     try:
         token, ttl = get_spotify_token()
-        print(f"time now: {datetime.now(datetime.timezone.utc)}")
+        print("we come here yeaH?")
+        print(f"time now: {datetime.now()}")
         print(f"ttl: {ttl}")
         print(f"ttl type: {type(ttl)}")
-        ttl_time = datetime.now(datetime.timezone.utc) + timedelta(seconds=ttl)
-        print(f"ttl_time: {ttl_time}")
+        # ttl_time = datetime.now(datetime.timezone.utc) + timedelta(seconds=ttl)
+        # print(f"ttl_time: {ttl_time}")
 
-        store_token_in_parameter_store(token, ttl_time)
+        # store_token_in_parameter_store(token, ttl_time)
         return {
             "statusCode": 200,
             "body": json.dumps({
