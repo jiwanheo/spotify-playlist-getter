@@ -97,7 +97,7 @@ def lambda_handler(event, context):
 
         # The endpoint to call on Spotify, e.g., '/search'
         endpoint = "/search"
-        
+        print(f"event: {event}")
         # Get query parameters, if provided
         query_params = event.get("queryStringParameters", {})
 
