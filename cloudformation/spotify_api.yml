@@ -56,18 +56,6 @@ Resources:
     Properties:
       Name: spotify-api-gateway
 
-  SpotifyApiStage:
-    Type: AWS::ApiGateway::Stage
-    Properties:
-      RestApiId: !Ref SpotifyApiGateway
-      StageName: dev
-      MethodSettings:
-        - LoggingLevel: INFO
-          DataTraceEnabled: true
-          MetricsEnabled: true
-          ResourcePath: "/*"
-          HttpMethod: "*"
-          
   SpotifyApiMethod:
     Type: AWS::ApiGateway::Method
     Properties:
