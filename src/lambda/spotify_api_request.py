@@ -122,8 +122,8 @@ def lambda_handler(event, context):
     #         }
     #     }
     ssm_client = boto3.client('ssm')
-    # logger.info("hihi")
-    # print("helo")
+    logger.info("hihi")
+    print("helo")
     try:
         # Fetch the Spotify token from Parameter Store
         token = ssm_client.get_parameter(
