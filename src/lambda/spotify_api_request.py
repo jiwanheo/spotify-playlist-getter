@@ -91,7 +91,9 @@ def lambda_handler(event, context):
     AWS Lambda handler function.
     """
     try:
-
+        
+        logger.info(f"whatsuppp")
+        print("whatsuppp")
         # The endpoint to call on Spotify, e.g., '/search'
         endpoint = event["rawPath"]
         logger.info(f"endpoint: {endpoint}")
