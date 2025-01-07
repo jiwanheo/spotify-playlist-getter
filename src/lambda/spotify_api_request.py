@@ -90,62 +90,34 @@ def lambda_handler(event, context):
     """
     AWS Lambda handler function.
     """
-    # try:
-
-    #     # The endpoint to call on Spotify, e.g., '/search'
-    #     endpoint = event["rawPath"]
-        
-    #     # Get query parameters, if provided
-    #     query_params = event.get("queryStringParameters", {})
-
-    #     # Make the request to Spotify API
-    #     response = make_spotify_request(endpoint, query_params)
-
-    #     # Return the response as an API Gateway-friendly response
-    #     return {
-    #         "statusCode": 200,
-    #         "body": json.dumps(response),
-    #         "headers": {
-    #             "Content-Type": "application/json"
-    #         }
-    #     }
-
-    # except Exception as e:
-    #     # In case of errors, return a 500 error
-    #     return {
-    #         "statusCode": 500,
-    #         "body": json.dumps({
-    #             "error": str(e)
-    #         }),
-    #         "headers": {
-    #             "Content-Type": "application/json"
-    #         }
-    #     }
-    """
-    A simple Lambda to fetch the Spotify token and check if the Lambda can interact with AWS Parameter Store.
-    """
-    # Initialize the SSM client
-    ssm_client = boto3.client('ssm')
-    
     try:
-        # Fetch the Spotify token from Parameter Store
-        token = ssm_client.get_parameter(
-            Name='/spotify/access_token',
-            WithDecryption=True
-        )['Parameter']['Value']
+
+        # The endpoint to call on Spotify, e.g., '/search'
+        endpoint = event["rawPath"]
         
-        # Respond with the token (this will be used to check if API Gateway triggers correctly)
+        # Get query parameters, if provided
+        query_params = event.get("queryStringParameters", {})
+
+        # Make the request to Spotify API
+        response = make_spotify_request(endpoint, query_params)
+
+        # Return the response as an API Gateway-friendly response
         return {
-            'statusCode': 200,
-            'body': json.dumps({
-                'message': 'Spotify token fetched successfully!',
-                'access_token': token
-            })
+            "statusCode": 200,
+            "body": json.dumps(response),
+            "headers": {
+                "Content-Type": "application/json"
+            }
         }
+
     except Exception as e:
+        # In case of errors, return a 500 error
         return {
-            'statusCode': 500,
-            'body': json.dumps({
-                'error': str(e)
-            })
+            "statusCode": 500,
+            "body": json.dumps({
+                "error": str(e)
+            }),
+            "headers": {
+                "Content-Type": "application/json"
+            }
         }
