@@ -66,6 +66,7 @@ def make_spotify_request(endpoint, query_params=None):
     # Set up the Authorization header with the Bearer token
     headers = {"Authorization": f"Bearer {token}"}
 
+    print(f"headers: {headers}")
     # If query parameters are provided, format the URL accordingly
     if query_params:
         query_string = urllib.parse.urlencode(query_params)
@@ -75,7 +76,7 @@ def make_spotify_request(endpoint, query_params=None):
         
     # Make the request to Spotify's API
     request = urllib.request.Request(url, headers=headers)
-    
+    print(f"request: {request}")
     try:
         # Open the URL and get the response
         with urllib.request.urlopen(request) as response:
@@ -98,8 +99,12 @@ def lambda_handler(event, context):
         # Get query parameters, if provided
         query_params = event.get("queryStringParameters", {})
 
+        print("hi")
+
         # Make the request to Spotify API
         response = make_spotify_request(endpoint, query_params)
+
+        print(f"response: {response}")
 
         # Return the response as an API Gateway-friendly response
         return {
