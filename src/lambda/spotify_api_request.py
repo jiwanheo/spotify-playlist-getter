@@ -74,6 +74,8 @@ def make_spotify_request(endpoint, query_params=None):
         url = f"{SPOTIFY_API_BASE_URL}{endpoint}"
     
     print(f"url: {url}")
+    print(f"headers: {headers}")
+    
     # Make the request to Spotify's API
     request = urllib.request.Request(url, headers=headers)
 
