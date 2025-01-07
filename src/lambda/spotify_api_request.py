@@ -24,6 +24,8 @@ def get_access_token():
         token = SSM_CLIENT.get_parameter(Name="/spotify/access_token", WithDecryption=True)["Parameter"]["Value"]
         ttl = SSM_CLIENT.get_parameter(Name="/spotify/token_ttl")["Parameter"]["Value"]
 
+        print(f"From request: ttl: {ttl}")
+
         # Check if the token is stale
         token_expiration_time = datetime.now(timezone.utc) + timedelta(seconds=int(ttl))
         if datetime.now(timezone.utc) >= token_expiration_time:
@@ -75,7 +77,7 @@ def make_spotify_request(endpoint, query_params=None):
     
     print(f"url: {url}")
     print(f"headers: {headers}")
-    
+
     # Make the request to Spotify's API
     request = urllib.request.Request(url, headers=headers)
 
@@ -99,7 +101,7 @@ def lambda_handler(event, context):
 
         # The endpoint to call on Spotify, e.g., '/search'
         endpoint = "/search"
-        print(f"event: {event}")
+
         # Get query parameters, if provided
         query_params = event.get("queryStringParameters", {})
 

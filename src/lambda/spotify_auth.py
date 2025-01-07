@@ -46,6 +46,7 @@ def get_spotify_token():
     with urllib.request.urlopen(request) as response:
         response_data = response.read()
         token_data = json.loads(response_data)
+        print(f"token_data: {token_data}")
 
     return token_data["access_token"], token_data["expires_in"]
 
@@ -75,6 +76,7 @@ def lambda_handler(event, context):
     """
     try:
         token, ttl = get_spotify_token()
+        print(f"From auth: ttl: {ttl}")
         store_token_in_parameter_store(token, ttl)
         return {
             "statusCode": 200,
