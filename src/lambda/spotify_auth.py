@@ -78,9 +78,10 @@ def lambda_handler(event, context):
         print("we come here yeaH?")
         print(f"time now: {datetime.now(timezone.utc)}")
         ttl_time = datetime.now(timezone.utc) + timedelta(seconds=ttl)
-        print(f"ttl_time: {ttl_time}")
+        time_to_store = ttl_time.isoformat()
+        print(f"time_to_store: {time_to_store}")
 
-        # store_token_in_parameter_store(token, ttl_time)
+        store_token_in_parameter_store(token, time_to_store)
         return {
             "statusCode": 200,
             "body": json.dumps({
