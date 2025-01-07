@@ -24,15 +24,11 @@ def get_access_token():
         token = SSM_CLIENT.get_parameter(Name="/spotify/access_token", WithDecryption=True)["Parameter"]["Value"]
         ttl = SSM_CLIENT.get_parameter(Name="/spotify/token_ttl")["Parameter"]["Value"]
 
-        print(f"From request: ttl: {ttl}")
-
         # Check if the token is stale
         token_expiration_time = datetime.fromisoformat(ttl)
         if datetime.now(timezone.utc) >= token_expiration_time:
             print("Access token is stale. Refreshing...")
             raise ValueError("Token is stale")  # Trigger a refresh
-        else:
-            print("we're guchi")
 
     except SSM_CLIENT.exceptions.ParameterNotFound:
         print("Access token not found in Parameter Store. Fetching a new token...")
@@ -76,14 +72,9 @@ def make_spotify_request(endpoint, query_params=None):
         url = f"{SPOTIFY_API_BASE_URL}{endpoint}?{query_string}"
     else:
         url = f"{SPOTIFY_API_BASE_URL}{endpoint}"
-    
-    print(f"url: {url}")
-    print(f"headers: {headers}")
 
     # Make the request to Spotify's API
     request = urllib.request.Request(url, headers=headers)
-
-    print(f"request: {request}")
 
     try:
         # Open the URL and get the response
