@@ -16,11 +16,9 @@ def get_spotify_credentials():
     """
     Retrieve Spotify API credentials from AWS Systems Manager Parameter Store.
     """
-    print("reach here?")
     ssm_client = boto3.client("ssm")
     client_id = ssm_client.get_parameter(Name="/spotify/client_id", WithDecryption=True)["Parameter"]["Value"]
     client_secret = ssm_client.get_parameter(Name="/spotify/client_secret", WithDecryption=True)["Parameter"]["Value"]
-    print("whgat about here?")
     return client_id, client_secret
 
 def get_spotify_token():
@@ -45,9 +43,12 @@ def get_spotify_token():
         }
     )
 
+    
+
     with urllib.request.urlopen(request) as response:
         response_data = response.read()
         token_data = json.loads(response_data)
+        print(f"token_data: {token_data}")
 
     return token_data["access_token"], token_data["expires_in"]
 
@@ -77,6 +78,7 @@ def lambda_handler(event, context):
     """
     try:
         token, ttl = get_spotify_token()
+        print("here?")
         ttl_time = datetime.now(datetime.timezone.utc) + timedelta(seconds=ttl)
         print(f"ttl_time: {ttl_time}")
 
