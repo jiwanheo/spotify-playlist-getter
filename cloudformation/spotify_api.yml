@@ -23,23 +23,30 @@ Resources:
     Properties:
       Name: spotify-api-gateway
 
-  SpotifyApiMethod:
+  SearchApiResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt SpotifyApiGateway.RootResourceId  # Attach under root "/"
+      PathPart: search  # Adds the "/search" path
+      RestApiId: !Ref SpotifyApiGateway
+  
+  SearchApiMethod:
     Type: AWS::ApiGateway::Method
     Properties:
       AuthorizationType: NONE
       HttpMethod: GET
-      ResourceId: !GetAtt SpotifyApiGateway.RootResourceId  # Attach directly to the root ("/")
+      ResourceId: !Ref SearchApiResource
       RestApiId: !Ref SpotifyApiGateway
       Integration:
-        IntegrationHttpMethod: POST  # The HTTP method for Lambda invocation
-        Type: AWS_PROXY  # Lambda Proxy Integration
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
         Uri: !Sub
-            - arn:aws:apigateway:${Region}:lambda:path/2015-03-31/functions/${SpotifyAPIRequestLambda.Arn}/invocations
-            - { Region: !Ref "AWS::Region" }
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SpotifyAPIRequestLambda.Arn}/invocations
+          - { Region: !Ref "AWS::Region" }
       MethodResponses:
         - StatusCode: 200  # Success response
           ResponseModels:
-            application/json: 'Empty'  # Empty response model (customizable)
+            application/json: 'Empty'
 
   SpotifyApiGatewayPermission:
     Type: AWS::Lambda::Permission
@@ -54,6 +61,7 @@ Resources:
             AccountId: !Ref "AWS::AccountId",
             ApiId: !Ref SpotifyApiGateway
           }
+          
   SpotifyApiStage:
     Type: AWS::ApiGateway::Stage
     Properties:
@@ -68,7 +76,8 @@ Resources:
 
   SpotifyApiDeployment:
     Type: AWS::ApiGateway::Deployment
-    DependsOn: SpotifyApiMethod
+    DependsOn: 
+      - SearchApiMethod   # New search method
     Properties:
       RestApiId: !Ref SpotifyApiGateway
 
