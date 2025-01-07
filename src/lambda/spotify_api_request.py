@@ -27,10 +27,12 @@ def get_access_token():
         print(f"From request: ttl: {ttl}")
 
         # Check if the token is stale
-        token_expiration_time = datetime.now(timezone.utc) + timedelta(seconds=int(ttl))
+        token_expiration_time = datetime.fromisoformat(ttl)
         if datetime.now(timezone.utc) >= token_expiration_time:
             print("Access token is stale. Refreshing...")
             raise ValueError("Token is stale")  # Trigger a refresh
+        else:
+            print("we're guchi")
 
     except SSM_CLIENT.exceptions.ParameterNotFound:
         print("Access token not found in Parameter Store. Fetching a new token...")

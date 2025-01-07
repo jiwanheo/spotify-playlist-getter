@@ -75,11 +75,8 @@ def lambda_handler(event, context):
     """
     try:
         token, ttl = get_spotify_token()
-        print("we come here yeaH?")
-        print(f"time now: {datetime.now(timezone.utc)}")
         ttl_time = datetime.now(timezone.utc) + timedelta(seconds=ttl)
         time_to_store = ttl_time.isoformat()
-        print(f"time_to_store: {time_to_store}")
 
         store_token_in_parameter_store(token, time_to_store)
         return {
