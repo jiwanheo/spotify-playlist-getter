@@ -55,7 +55,19 @@ Resources:
     Type: AWS::ApiGateway::RestApi
     Properties:
       Name: spotify-api-gateway
-  
+
+  SpotifyApiStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId: !Ref SpotifyApiGateway
+      StageName: dev
+      MethodSettings:
+        - LoggingLevel: INFO
+          DataTraceEnabled: true
+          MetricsEnabled: true
+          ResourcePath: "/*"
+          HttpMethod: "*"
+          
   SpotifyApiMethod:
     Type: AWS::ApiGateway::Method
     Properties:
@@ -95,3 +107,31 @@ Resources:
     Properties:
       RestApiId: !Ref SpotifyApiGateway
       StageName: dev
+  
+  ApiGatewayCloudWatchRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: APIGatewayCloudWatchLogsRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: apigateway.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: ApiGatewayLogsPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                Resource: "arn:aws:logs:*:*:*"
+
+  ApiGatewayAccountSettings:
+    Type: AWS::ApiGateway::Account
+    Properties:
+      CloudWatchRoleArn: !GetAtt ApiGatewayCloudWatchRole.Arn
