@@ -87,7 +87,7 @@ Resources:
       FunctionName: spotify-api-request-lambda
       Handler: spotify_api_request.lambda_handler
       Runtime: python3.9
-      Role: !GetAtt LambdaExecutionRole.Arn
+      Role: !GetAtt LambdaRequestExecutionRole.Arn
       Code:
         S3Bucket: !ImportValue S3ForRequestName
         S3Key: spotify_api_request.zip
@@ -96,7 +96,7 @@ Resources:
         Variables:
           SPOTIFY_API_BASE_URL: "https://api.spotify.com/v1"
 
-  LambdaExecutionRole:
+  LambdaRequestExecutionRole:
     Type: AWS::IAM::Role
     Properties:
       RoleName: SpotifyAPIRequestLambdaRole
@@ -139,7 +139,7 @@ Resources:
       FunctionName: spotify-api-get-user-playlist-lambda
       Handler: spotify_get_user_playlist.lambda_handler
       Runtime: python3.9
-      Role: !GetAtt LambdaExecutionRole.Arn
+      Role: !GetAtt LambdaEndpointsExecutionRole.Arn
       Code:
         S3Bucket: !ImportValue S3ForRequestName
         S3Key: spotify_api_user-playlist.zip
@@ -147,6 +147,36 @@ Resources:
       Environment:
         Variables:
           SPOTIFY_API_BASE_URL: "https://api.spotify.com/v1"
+  
+  LambdaEndpointsExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: SpotifyAPIRequestLambdaRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: SpotifyAPIEndpointsPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              # Allow Lambda to invoke the SpotifyAuthLambda for token refresh
+              - Effect: Allow
+                Action:
+                  - "lambda:InvokeFunction"
+                Resource: !GetAtt SpotifyAPIRequestLambda.Arn
+              # Allow logging for debugging and monitoring
+              - Effect: Allow
+                Action:
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                Resource: 
+                  - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*
 
   
         

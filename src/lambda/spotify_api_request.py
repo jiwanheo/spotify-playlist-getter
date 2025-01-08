@@ -109,6 +109,8 @@ def lambda_handler(event, context):
         #         "Content-Type": "application/json"
         #     }
         # }
+        logger.info(f"event: {event}")
+        logger.info(f"context: {context}")
         return {
             "statusCode": 200,
             "body": "Hello, World!"
