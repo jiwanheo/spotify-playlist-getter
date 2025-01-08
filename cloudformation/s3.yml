@@ -24,6 +24,14 @@ Resources:
       Tags:
         - Key: Project
           Value: spotify-playlist-getter
+      CorsConfiguration:
+        CorsRules:
+          - AllowedOrigins:
+              - '*'
+            AllowedMethods:
+              - GET
+            AllowedHeaders:
+              - '*'
 
 Outputs:
   S3BucketName:

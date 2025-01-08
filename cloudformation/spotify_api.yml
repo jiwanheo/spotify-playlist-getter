@@ -175,6 +175,16 @@ Resources:
 
   # Wrapping up 
 
+  GatewayResponseDefaultCORS:
+    Type: AWS::ApiGateway::GatewayResponse
+    Properties:
+      ResponseType: DEFAULT_4XX  # Applies to preflight requests that fail (missing CORS headers)
+      RestApiId: !Ref SpotifyApiGateway
+      ResponseParameters:
+        gatewayresponse.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+        gatewayresponse.header.Access-Control-Allow-Methods: "'OPTIONS,GET,POST,PUT,DELETE'"
+        gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+
   SpotifyApiStage:
     Type: AWS::ApiGateway::Stage
     Properties:
