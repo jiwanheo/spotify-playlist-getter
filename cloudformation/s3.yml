@@ -11,6 +11,19 @@ Resources:
       Tags:
         - Key: Project
           Value: spotify-playlist-getter
+  
+  UIS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: spotify-playlist-getter.ui
+      VersioningConfiguration:
+        Status: Enabled # Enable versioning if needed
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerPreferred
+      Tags:
+        - Key: Project
+          Value: spotify-playlist-getter
 
 Outputs:
   S3BucketName:
@@ -18,3 +31,8 @@ Outputs:
     Value: !Ref S3Bucket
     Export:
       Name: S3BucketName
+  UIS3BucketName:
+    Description: The domain name of the UI S3 bucket 
+    Value: !Ref UIS3Bucket
+    Export:
+      Name: UIS3BucketName
