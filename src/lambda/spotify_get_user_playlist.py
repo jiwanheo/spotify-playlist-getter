@@ -29,7 +29,7 @@ def lambda_handler(event, context):
         }
         
         response = LAMBDA_CLIENT.invoke(
-            FunctionName="spotify-api-request",  # Update to match the exact name of your auth Lambda
+            FunctionName="spotify-api-request-lambda",  # Update to match the exact name of your auth Lambda
             InvocationType="RequestResponse",
             Payload=json.dumps(payload)
         )

@@ -158,7 +158,7 @@ Resources:
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
-              # Allow Lambda to invoke the SpotifyAuthLambda for token refresh
+              # Allow Lambda to invoke SpotifyAPIRequestLambda
               - Effect: Allow
                 Action:
                   - "lambda:InvokeFunction"
@@ -174,7 +174,7 @@ Resources:
 
 
   # Wrapping up 
-  
+
   SpotifyApiStage:
     Type: AWS::ApiGateway::Stage
     Properties:
