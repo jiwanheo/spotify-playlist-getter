@@ -109,6 +109,9 @@ def lambda_handler(event, context):
         #         "Content-Type": "application/json"
         #     }
         # }
+
+
+        # Event has the queries passed in
         logger.info(f"event: {event}")
         logger.info(f"context: {context}")
         return {
