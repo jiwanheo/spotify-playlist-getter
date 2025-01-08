@@ -102,13 +102,15 @@ def lambda_handler(event, context):
 
         logger.info(f"query_params: {query_params}")
 
-        endpoint_routes = {
-            "/user_playlist": f"hello {endpoint}"
-        }
+        def endpoint_router(s):
+            endpoint_routes = {
+                "/user_playlist": f"hello {s}"
+            }
+            return endpoint_routes.get(s, "Unknown route!")
 
 
         # Get response based on name, with a default value
-        route = endpoint_routes.get(endpoint, "brother")
+        route = endpoint_router(endpoint)
 
         
         logger.info(f"route: {route}")
