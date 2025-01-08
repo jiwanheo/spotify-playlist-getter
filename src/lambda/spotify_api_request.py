@@ -92,22 +92,26 @@ def lambda_handler(event, context):
     """
     try:
 
-        # The endpoint to call on Spotify, e.g., '/search'
-        endpoint = "/search"
+        # # The endpoint to call on Spotify, e.g., '/search'
+        # endpoint = "/search"
 
-        # Get query parameters, if provided
-        query_params = event.get("queryStringParameters", {})
+        # # Get query parameters, if provided
+        # query_params = event.get("queryStringParameters", {})
 
-        # Make the request to Spotify API
-        response = make_spotify_request(endpoint, query_params)
+        # # Make the request to Spotify API
+        # response = make_spotify_request(endpoint, query_params)
 
-        # Return the response as an API Gateway-friendly response
+        # # Return the response as an API Gateway-friendly response
+        # return {
+        #     "statusCode": 200,
+        #     "body": json.dumps(response),
+        #     "headers": {
+        #         "Content-Type": "application/json"
+        #     }
+        # }
         return {
             "statusCode": 200,
-            "body": json.dumps(response),
-            "headers": {
-                "Content-Type": "application/json"
-            }
+            "body": "Hello, World!"
         }
 
     except Exception as e:

@@ -53,6 +53,13 @@ jobs:
         cd src/lambda
         zip -r spotify_api_request.zip spotify_api_request.py  # Add all files Lambda depends on
         aws s3 cp spotify_api_request.zip s3://spotify-playlist-getter.request/spotify_api_request.zip
+    
+    # Zip the spotify_get_user_playlist Lambda code and upload to S3
+    - name: Package get_user_playlist Code and upload
+      run: |
+        cd src/lambda
+        zip -r spotify_api_user-playlist.zip spotify_api_user-playlist.py  # Add all files Lambda depends on
+        aws s3 cp spotify_api_user-playlist.zip s3://spotify-playlist-getter.request/spotify_api_user-playlist.zip
         
     - name: Deploy API Stack
       run: |

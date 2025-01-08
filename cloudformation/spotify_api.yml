@@ -23,25 +23,25 @@ Resources:
     Properties:
       Name: spotify-api-gateway
 
-  SearchApiResource:
+  UserPlaylistResource:
     Type: AWS::ApiGateway::Resource
     Properties:
       ParentId: !GetAtt SpotifyApiGateway.RootResourceId  # Attach under root "/"
-      PathPart: search  # Adds the "/search" path
+      PathPart: user-playlist  # Adds the "/user-playlist" path
       RestApiId: !Ref SpotifyApiGateway
   
-  SearchApiMethod:
+  UserPlaylistApiMethod:
     Type: AWS::ApiGateway::Method
     Properties:
       AuthorizationType: NONE
       HttpMethod: GET
-      ResourceId: !Ref SearchApiResource
+      ResourceId: !Ref UserPlaylistResource
       RestApiId: !Ref SpotifyApiGateway
       Integration:
         IntegrationHttpMethod: POST
         Type: AWS_PROXY
         Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SpotifyAPIRequestLambda.Arn}/invocations
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SpotifyAPIUserPlaylistLambda.Arn}/invocations
           - { Region: !Ref "AWS::Region" }
       MethodResponses:
         - StatusCode: 200  # Success response
@@ -51,7 +51,7 @@ Resources:
   SpotifyApiGatewayPermission:
     Type: AWS::Lambda::Permission
     Properties:
-      FunctionName: !Ref SpotifyAPIRequestLambda
+      FunctionName: !Ref SpotifyAPIUserPlaylistLambda
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub
@@ -132,6 +132,21 @@ Resources:
                   - "logs:PutLogEvents"
                 Resource: 
                   - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*
+  
+  SpotifyAPIUserPlaylistLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: spotify-api-get-user-playlist-lambda
+      Handler: spotify_get_user_playlist.lambda_handler
+      Runtime: python3.9
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        S3Bucket: !ImportValue S3ForRequestName
+        S3Key: spotify_api_user-playlist.zip
+      Timeout: 15
+      Environment:
+        Variables:
+          SPOTIFY_API_BASE_URL: "https://api.spotify.com/v1"
 
   
         
