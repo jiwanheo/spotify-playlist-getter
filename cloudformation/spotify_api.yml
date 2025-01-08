@@ -23,64 +23,7 @@ Resources:
     Properties:
       Name: spotify-api-gateway
 
-  UserPlaylistResource:
-    Type: AWS::ApiGateway::Resource
-    Properties:
-      ParentId: !GetAtt SpotifyApiGateway.RootResourceId  # Attach under root "/"
-      PathPart: user-playlist  # Adds the "/user-playlist" path
-      RestApiId: !Ref SpotifyApiGateway
-  
-  UserPlaylistApiMethod:
-    Type: AWS::ApiGateway::Method
-    Properties:
-      AuthorizationType: NONE
-      HttpMethod: GET
-      ResourceId: !Ref UserPlaylistResource
-      RestApiId: !Ref SpotifyApiGateway
-      Integration:
-        IntegrationHttpMethod: POST
-        Type: AWS_PROXY
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SpotifyAPIUserPlaylistLambda.Arn}/invocations
-          - { Region: !Ref "AWS::Region" }
-      MethodResponses:
-        - StatusCode: 200  # Success response
-          ResponseModels:
-            application/json: 'Empty'
-
-  SpotifyApiGatewayPermission:
-    Type: AWS::Lambda::Permission
-    Properties:
-      FunctionName: !Ref SpotifyAPIUserPlaylistLambda
-      Action: lambda:InvokeFunction
-      Principal: apigateway.amazonaws.com
-      SourceArn: !Sub
-        - arn:aws:execute-api:${Region}:${AccountId}:${ApiId}/*
-        - {
-            Region: !Ref "AWS::Region",
-            AccountId: !Ref "AWS::AccountId",
-            ApiId: !Ref SpotifyApiGateway
-          }
-          
-  SpotifyApiStage:
-    Type: AWS::ApiGateway::Stage
-    Properties:
-      StageName: dev
-      RestApiId: !Ref SpotifyApiGateway
-      DeploymentId: !Ref SpotifyApiDeployment
-      MethodSettings:
-        - HttpMethod: "*"
-          ResourcePath: "/*"
-          LoggingLevel: INFO
-          MetricsEnabled: true
-
-  SpotifyApiDeployment:
-    Type: AWS::ApiGateway::Deployment
-    DependsOn: 
-      - UserPlaylistApiMethod
-    Properties:
-      RestApiId: !Ref SpotifyApiGateway
-
+  # "Parent" lambda where all endpoints are directed to, to make the API request
   SpotifyAPIRequestLambda:
     Type: AWS::Lambda::Function
     Properties:
@@ -132,7 +75,58 @@ Resources:
                   - "logs:PutLogEvents"
                 Resource: 
                   - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*
+
+  # Endpoints
+
+  ## Each endpoint will have 
+  ## - AWS::ApiGateway::Resource
+  ## - AWS::ApiGateway::Method
+  ## - AWS::ApiGateway::Permission
+  ## - AWS::ApiGateway::Function
+  ## - AWS::ApiGateway::Role
+
+  # Endpoint 1
+
+  ## Endpoint 1 Resource
+  UserPlaylistResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt SpotifyApiGateway.RootResourceId  # Attach under root "/"
+      PathPart: user-playlist  # Adds the "/user-playlist" path
+      RestApiId: !Ref SpotifyApiGateway
   
+  UserPlaylistApiMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      ResourceId: !Ref UserPlaylistResource
+      RestApiId: !Ref SpotifyApiGateway
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SpotifyAPIUserPlaylistLambda.Arn}/invocations
+          - { Region: !Ref "AWS::Region" }
+      MethodResponses:
+        - StatusCode: 200  # Success response
+          ResponseModels:
+            application/json: 'Empty'
+
+  SpotifyApiGatewayPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref SpotifyAPIUserPlaylistLambda
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub
+        - arn:aws:execute-api:${Region}:${AccountId}:${ApiId}/*
+        - {
+            Region: !Ref "AWS::Region",
+            AccountId: !Ref "AWS::AccountId",
+            ApiId: !Ref SpotifyApiGateway
+          }
+
   SpotifyAPIUserPlaylistLambda:
     Type: AWS::Lambda::Function
     Properties:
@@ -177,6 +171,32 @@ Resources:
                   - "logs:PutLogEvents"
                 Resource: 
                   - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*
+
+
+  # Wrapping up 
+  
+  SpotifyApiStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      StageName: dev
+      RestApiId: !Ref SpotifyApiGateway
+      DeploymentId: !Ref SpotifyApiDeployment
+      MethodSettings:
+        - HttpMethod: "*"
+          ResourcePath: "/*"
+          LoggingLevel: INFO
+          MetricsEnabled: true
+
+  SpotifyApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: 
+      - UserPlaylistApiMethod
+    Properties:
+      RestApiId: !Ref SpotifyApiGateway
+
+  
+  
+  
 
   
         
