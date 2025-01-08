@@ -32,7 +32,7 @@ Resources:
       Runtime: python3.9
       Role: !GetAtt LambdaRequestExecutionRole.Arn
       Code:
-        S3Bucket: !ImportValue S3ForRequestName
+        S3Bucket: !ImportValue S3BucketName
         S3Key: spotify_api_request.zip
       Timeout: 15
       Environment:
@@ -135,7 +135,7 @@ Resources:
       Runtime: python3.9
       Role: !GetAtt LambdaEndpointsExecutionRole.Arn
       Code:
-        S3Bucket: !ImportValue S3ForRequestName
+        S3Bucket: !ImportValue S3BucketName
         S3Key: spotify_api_user-playlist.zip
       Timeout: 15
       Environment:

@@ -46,7 +46,7 @@ Resources:
       Runtime: python3.9
       Role: !GetAtt AuthLambdaExecutionRole.Arn
       Code:
-        S3Bucket: !ImportValue S3ForAuthName
+        S3Bucket: !ImportValue S3BucketName
         S3Key: spotify_auth.zip
       Timeout: 15
       Tags:
