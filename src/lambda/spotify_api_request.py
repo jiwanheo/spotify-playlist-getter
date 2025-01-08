@@ -91,44 +91,25 @@ def lambda_handler(event, context):
     AWS Lambda handler function.
     """
     try:
-
+        logger.info(f"event: {endpoint}")
         # The endpoint to call on Spotify, e.g., '/search'
         endpoint = event["resource"]
-
-        logger.info(f"endpoint: {endpoint}")
 
         # Get query parameters, if provided
         query_params = event.get("queryStringParameters", {})
 
-        logger.info(f"query_params: {query_params}")
+        if endpoint == "/user-playlist":
+            route = event["route"]
+            # Make the request to Spotify API
+            response = make_spotify_request(route, query_params)
 
-        endpoint_routes = {
-            "/user-playlist": f"/users/{query_params['userId']}/playlists"
-        }
-
-        # Get response based on name, with a default value
-        route = endpoint_routes.get(endpoint, "Unknown route!")
-
-        logger.info(f"route: {route}")
-
-        
-
-
-        # # Make the request to Spotify API
-        # response = make_spotify_request(route, query_params)
-
-        # # Return the response as an API Gateway-friendly response
-        # return {
-        #     "statusCode": 200,
-        #     "body": json.dumps(response),
-        #     "headers": {
-        #         "Content-Type": "application/json"
-        #     }
-        # }
-
+        # Return the response as an API Gateway-friendly response
         return {
             "statusCode": 200,
-            "body": "Hello, World!"
+            "body": json.dumps(response),
+            "headers": {
+                "Content-Type": "application/json"
+            }
         }
 
     except Exception as e:

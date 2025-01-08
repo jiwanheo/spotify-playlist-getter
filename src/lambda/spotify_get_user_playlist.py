@@ -15,21 +15,19 @@ def lambda_handler(event, context):
     AWS Lambda handler function.
     """
     try:
-        # The endpoint to call on Spotify, e.g., '/search'
-        endpoint = "/users/jiwanheo123/playlists"
 
-        # # Get query parameters, if provided
-        # query_params = event.get("queryStringParameters", {})
+        # Construct the Spotify API call here, and invoke spotify_api_request.py
+        query_params = event.get("queryStringParameters", {})
+        route = f"/users/{query_params['userId']}/playlists"
 
-        # Make the request to Spotify API
-        # response = make_spotify_request(endpoint, query_params)
-
+        event['route'] = route
+        
         response = LAMBDA_CLIENT.invoke(
             FunctionName="spotify-api-request-lambda",  # Update to match the exact name of your auth Lambda
             InvocationType="RequestResponse",
             Payload=json.dumps(event)
         )
-        
+
         logger.info(f"response: {response}")
 
         # Return the response as an API Gateway-friendly response
