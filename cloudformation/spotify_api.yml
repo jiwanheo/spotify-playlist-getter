@@ -77,7 +77,7 @@ Resources:
   SpotifyApiDeployment:
     Type: AWS::ApiGateway::Deployment
     DependsOn: 
-      - SearchApiMethod   # New search method
+      - UserPlaylistApiMethod
     Properties:
       RestApiId: !Ref SpotifyApiGateway
 
