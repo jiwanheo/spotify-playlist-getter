@@ -21,7 +21,7 @@ def lambda_handler(event, context):
         route = f"/users/{query_params['userId']}/playlists"
 
         event['route'] = route
-        
+
         logger.info(f"event: {event}")
 
         response = LAMBDA_CLIENT.invoke(
@@ -31,6 +31,13 @@ def lambda_handler(event, context):
         )
 
         logger.info(f"response: {response}")
+
+        # Handle the Payload
+        if 'Payload' in response:
+            payload_stream = response['Payload']  # This is the StreamingBody object
+            response['Payload'] = json.loads(payload_stream.read())
+
+        logger.info(f"response after payload: {response}")
 
         # Return the response as an API Gateway-friendly response
         return {
