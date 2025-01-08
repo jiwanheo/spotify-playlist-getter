@@ -30,14 +30,10 @@ def lambda_handler(event, context):
             Payload=json.dumps(event)
         )
 
-        logger.info(f"response: {response}")
-
         # Handle the Payload
         if 'Payload' in response:
             payload_stream = response['Payload']  # This is the StreamingBody object
             response['Payload'] = json.loads(payload_stream.read())
-
-        logger.info(f"response after payload: {response}")
 
         # Return the response as an API Gateway-friendly response
         return {
