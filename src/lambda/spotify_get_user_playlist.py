@@ -22,6 +22,8 @@ def lambda_handler(event, context):
 
         event['route'] = route
         
+        logger.info(f"event: {event}")
+
         response = LAMBDA_CLIENT.invoke(
             FunctionName="spotify-api-request-lambda",  # Update to match the exact name of your auth Lambda
             InvocationType="RequestResponse",
