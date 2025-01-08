@@ -24,17 +24,12 @@ def lambda_handler(event, context):
         # Make the request to Spotify API
         # response = make_spotify_request(endpoint, query_params)
 
-        payload = {
-            "hihi": "brother"
-        }
-        
         response = LAMBDA_CLIENT.invoke(
             FunctionName="spotify-api-request-lambda",  # Update to match the exact name of your auth Lambda
             InvocationType="RequestResponse",
-            Payload=json.dumps(payload)
+            Payload=json.dumps(event)
         )
 
-        logger.info(f"event: {event}")
         logger.info(f"response: {response}")
 
         # Return the response as an API Gateway-friendly response
