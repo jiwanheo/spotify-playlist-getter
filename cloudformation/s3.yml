@@ -18,6 +18,8 @@ Resources:
       BucketName: spotify-playlist-getter.ui
       VersioningConfiguration:
         Status: Enabled # Enable versioning if needed
+      WebsiteConfiguration:
+        IndexDocument: index.html
       OwnershipControls:
         Rules:
           - ObjectOwnership: BucketOwnerPreferred
