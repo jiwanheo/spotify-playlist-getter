@@ -92,14 +92,26 @@ def lambda_handler(event, context):
     """
     try:
 
-        # # The endpoint to call on Spotify, e.g., '/search'
-        # endpoint = "/search"
+        # The endpoint to call on Spotify, e.g., '/search'
+        endpoint = event["resource"]
 
-        # # Get query parameters, if provided
-        # query_params = event.get("queryStringParameters", {})
+        # Get query parameters, if provided
+        query_params = event.get("queryStringParameters", {})
+
+        endpoint_routes = {
+            "/user_playlist": f"hello {endpoint}"
+        }
+
+
+        # Get response based on name, with a default value
+        route = endpoint_routes[endpoint]
+
+        
+        print(route)
+
 
         # # Make the request to Spotify API
-        # response = make_spotify_request(endpoint, query_params)
+        # response = make_spotify_request(route, query_params)
 
         # # Return the response as an API Gateway-friendly response
         # return {
@@ -110,10 +122,6 @@ def lambda_handler(event, context):
         #     }
         # }
 
-
-        # Event has the queries passed in
-        logger.info(f"event: {event}")
-        logger.info(f"context: {context}")
         return {
             "statusCode": 200,
             "body": "Hello, World!"

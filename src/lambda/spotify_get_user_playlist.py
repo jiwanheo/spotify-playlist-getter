@@ -29,7 +29,7 @@ def lambda_handler(event, context):
             InvocationType="RequestResponse",
             Payload=json.dumps(event)
         )
-
+        
         logger.info(f"response: {response}")
 
         # Return the response as an API Gateway-friendly response
