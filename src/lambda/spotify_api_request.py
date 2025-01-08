@@ -108,7 +108,7 @@ def lambda_handler(event, context):
 
 
         # Get response based on name, with a default value
-        route = endpoint_routes[endpoint]
+        route = endpoint_routes.get(endpoint, "brother")
 
         
         logger.info(f"route: {route}")
