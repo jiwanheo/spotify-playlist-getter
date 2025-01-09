@@ -95,6 +95,30 @@ Resources:
       PathPart: user-playlist  # Adds the "/user-playlist" path
       RestApiId: !Ref SpotifyApiGateway
   
+  UserPlaylistOptionsMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref SpotifyApiGateway
+      ResourceId: !Ref UserPlaylistResource
+      HttpMethod: OPTIONS
+      AuthorizationType: NONE
+      MethodResponses:
+        - StatusCode: "200"
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+      Integration:
+        Type: MOCK
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+        IntegrationResponses:
+          - StatusCode: "200"
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,GET,POST,PUT,DELETE'"
+
   UserPlaylistApiMethod:
     Type: AWS::ApiGateway::Method
     Properties:
@@ -108,10 +132,14 @@ Resources:
         Uri: !Sub
           - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SpotifyAPIUserPlaylistLambda.Arn}/invocations
           - { Region: !Ref "AWS::Region" }
+        IntegrationResponses:
+          - StatusCode: "200"
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"  # Allow all origins
       MethodResponses:
-        - StatusCode: 200  # Success response
-          ResponseModels:
-            application/json: 'Empty'
+        - StatusCode: "200"  # Success response
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true  # CORS enabled
 
   SpotifyApiGatewayPermission:
     Type: AWS::Lambda::Permission
@@ -175,16 +203,6 @@ Resources:
 
   # Wrapping up 
 
-  GatewayResponseDefaultCORS:
-    Type: AWS::ApiGateway::GatewayResponse
-    Properties:
-      ResponseType: DEFAULT_4XX  # Applies to preflight requests that fail (missing CORS headers)
-      RestApiId: !Ref SpotifyApiGateway
-      ResponseParameters:
-        gatewayresponse.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-        gatewayresponse.header.Access-Control-Allow-Methods: "'OPTIONS,GET,POST,PUT,DELETE'"
-        gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
-
   SpotifyApiStage:
     Type: AWS::ApiGateway::Stage
     Properties:
@@ -200,7 +218,8 @@ Resources:
   SpotifyApiDeployment:
     Type: AWS::ApiGateway::Deployment
     DependsOn: 
-      - UserPlaylistApiMethod
+      - UserPlaylistOptionsMethod
+      - UserPlaylistGetMethod
     Properties:
       RestApiId: !Ref SpotifyApiGateway
 
