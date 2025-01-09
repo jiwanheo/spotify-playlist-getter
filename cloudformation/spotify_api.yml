@@ -119,7 +119,7 @@ Resources:
               method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
               method.response.header.Access-Control-Allow-Methods: "'OPTIONS,GET,POST,PUT,DELETE'"
 
-  UserPlaylistApiMethod:
+  UserPlaylistGetMethod:
     Type: AWS::ApiGateway::Method
     Properties:
       AuthorizationType: NONE
