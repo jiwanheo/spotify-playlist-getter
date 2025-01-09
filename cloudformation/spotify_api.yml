@@ -190,7 +190,6 @@ Resources:
   SpotifyApiDeployment:
     Type: AWS::ApiGateway::Deployment
     DependsOn: 
-      - UserPlaylistOptionsMethod
       - UserPlaylistGetMethod
     Properties:
       RestApiId: !Ref SpotifyApiGateway
