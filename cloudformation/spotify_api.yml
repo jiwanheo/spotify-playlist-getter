@@ -108,10 +108,6 @@ Resources:
         Uri: !Sub
           - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SpotifyAPIUserPlaylistLambda.Arn}/invocations
           - { Region: !Ref "AWS::Region" }
-      MethodResponses:
-        - StatusCode: 200  # Success response
-          ResponseModels:
-            application/json: 'Empty'
         
   SpotifyApiGatewayPermission:
     Type: AWS::Lambda::Permission
