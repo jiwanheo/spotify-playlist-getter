@@ -17,7 +17,7 @@ function App() {
     setLoading(true); // Start loading
 
     try {
-      const response = await fetch(`https://l18tuv9po2.execute-api.us-east-1.amazonaws.com/dev/user-playlist?userId=${encodedUserId}`);
+      const response = await fetch(`https://wz3soxp4h1.execute-api.us-east-1.amazonaws.com/dev/user-playlist?userId=${encodedUserId}`);
       
       if (!response.ok) {
         throw new Error('API call failed');
